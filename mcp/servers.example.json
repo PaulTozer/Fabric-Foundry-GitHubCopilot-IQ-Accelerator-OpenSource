@@ -1,0 +1,30 @@
+{
+  "servers": [
+    {
+      "id": "fabric-ontology",
+      "type": "http",
+      "enabled": false,
+      "ontology": true,
+      "url": "https://api.fabric.microsoft.com/v1/mcp/dataPlane/workspaces/WORKSPACE/items/ONTOLOGY/ontologyEndpoint",
+      "allowedOrigins": ["https://api.fabric.microsoft.com"],
+      "useFabricToken": true,
+      "tools": ["search_ontology"]
+    },
+    {
+      "id": "foundry-iq",
+      "type": "http",
+      "enabled": false,
+      "url": "https://your-approved-mcp.example/mcp",
+      "allowedOrigins": ["https://your-approved-mcp.example"],
+      "headers": {"Authorization": "FOUNDRY_IQ_MCP_AUTHORIZATION"}
+    },
+    {
+      "id": "work-iq",
+      "type": "sse",
+      "enabled": false,
+      "url": "https://your-approved-work-mcp.example/sse",
+      "allowedOrigins": ["https://your-approved-work-mcp.example"],
+      "headers": {"Authorization": "WORK_IQ_MCP_AUTHORIZATION"}
+    }
+  ]
+}

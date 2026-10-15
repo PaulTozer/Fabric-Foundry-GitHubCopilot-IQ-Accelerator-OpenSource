@@ -1,0 +1,74 @@
+@import "tailwindcss" source(none);
+@config "../tailwind.config.mjs";
+@source "../app";
+@source "../components";
+
+@theme {
+  /* Keep v3's fixed text metrics when nested labels use a smaller font size. */
+  --text-xs--line-height: 1rem;
+  --text-sm--line-height: 1.25rem;
+  --text-base--line-height: 1.5rem;
+  --text-lg--line-height: 1.75rem;
+  --text-xl--line-height: 1.75rem;
+  --text-2xl--line-height: 2rem;
+  --text-3xl--line-height: 2.25rem;
+  --text-4xl--line-height: 2.5rem;
+  --color-amber-100: #fef3c7;
+  --color-red-50: #fef2f2;
+  --color-red-200: #fecaca;
+  --color-red-300: #fca5a5;
+  --color-red-400: #f87171;
+  --color-red-600: #dc2626;
+  --color-red-700: #b91c1c;
+  --color-red-800: #991b1b;
+}
+
+@layer base {
+  /* Retain the existing v3 preflight appearance and pointer affordances. */
+  *, ::before, ::after, ::backdrop, ::file-selector-button { border-color: #e5e7eb; }
+  input::placeholder, textarea::placeholder { color: #9ca3af; opacity: 1; }
+  button, [role="button"] { cursor: pointer; }
+  :disabled { cursor: default; }
+  select:disabled { opacity: revert; }
+  dialog { margin: auto; }
+  html, body { height: 100%; }
+  body {
+    @apply bg-brand-paper text-brand-grey antialiased;
+    font-family: "Segoe UI", Arial, system-ui, sans-serif;
+  }
+  /* Subtle scrollbars to match the Copilot look */
+  ::-webkit-scrollbar { width: 8px; height: 8px; }
+  ::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.15); border-radius: 4px; }
+  ::-webkit-scrollbar-thumb:hover { background: rgba(0,0,0,0.3); }
+}
+
+@layer components {
+  .brand-corner { border-radius: 0 0 2.5rem 0; }
+  .brand-corner-lg { border-radius: 0 0 4rem 0; }
+  /* Chat bubble defaults */
+  .chat-bubble, .chat-bubble-user, .chat-bubble-asst { @apply rounded-2xl px-4 py-3 leading-relaxed shadow-xs; }
+  .chat-bubble-user   { @apply bg-brand-purple text-white; }
+  .chat-bubble-asst   { @apply bg-white border border-brand-line; }
+  .chat-bubble-asst p { @apply mb-2 last:mb-0; }
+  .chat-bubble-asst h1, .chat-bubble-asst h2, .chat-bubble-asst h3 {
+    @apply font-display font-semibold tracking-tight mt-4 mb-2;
+  }
+  .chat-bubble-asst h2 { @apply text-xl; }
+  .chat-bubble-asst h3 { @apply text-lg; }
+  .chat-bubble-asst ul { @apply list-disc pl-5 my-2 space-y-1; }
+  .chat-bubble-asst ol { @apply list-decimal pl-5 my-2 space-y-1; }
+  .chat-bubble-asst code {
+    @apply px-1.5 py-0.5 rounded-sm bg-brand-paper text-[0.92em] font-mono text-brand-purple;
+  }
+  .chat-bubble-asst pre {
+    @apply my-3 rounded-lg bg-brand-grey text-brand-paper p-3 overflow-x-auto text-sm;
+  }
+  .chat-bubble-asst pre code { @apply bg-transparent text-brand-paper p-0; }
+  .chat-bubble-asst table {
+    @apply my-3 border-collapse text-sm;
+  }
+  .chat-bubble-asst th, .chat-bubble-asst td {
+    @apply border border-brand-line px-2 py-1 text-left align-top;
+  }
+  .chat-bubble-asst th { @apply bg-brand-paper font-semibold; }
+}

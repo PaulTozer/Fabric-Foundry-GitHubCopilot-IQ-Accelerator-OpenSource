@@ -1,0 +1,26 @@
+# EnterpriseIQ
+.venv/
+__pycache__/
+*.pyc
+.azure/
+.env
+agents/tests/.env
+agents/tests/results/
+_demo_data_files/
+_*.json
+_*.txt
+_*.csv
+_*.md
+!_create_*.py
+node_modules/
+webui/test-results/
+webui/playwright-report/
+.next/
+*.tsbuildinfo
+.import-*/
+.reference-*/
+.import-snapshot.py
+.pytest_cache/
+.ruff_cache/
+.refactor-import.py
+webui/public/pdf.worker.min.mjs

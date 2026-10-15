@@ -1,0 +1,14 @@
+.git
+.venv
+__pycache__
+*.pyc
+_demo_data_files
+_load_demo_data.ipynb
+_create_tables.ipynb
+.azure
+node_modules
+.next
+*.md
+!agents/CopilotSDK_Instructions.md
+!agents/Method6_Council_Instructions.md
+!agents/Method7_WorkIQ_Instructions.md

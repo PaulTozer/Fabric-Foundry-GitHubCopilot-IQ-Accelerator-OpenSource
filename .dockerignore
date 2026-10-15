@@ -1,0 +1,81 @@
+# Repo-root .dockerignore.
+#
+# The MCP image is built with context = repo root (see azure.yaml) so the
+# Dockerfile can `COPY agents/ crowd/ mcp/` in one go. Docker looks for
+# .dockerignore at the CONTEXT root, not next to the Dockerfile, which is
+# why mcp/.dockerignore alone wasn't enough — historically the entire
+# _demo_data_files/ directory (~160 MB) was uploaded to ACR Tasks on
+# every deploy, making "Uploading remote build context" take many minutes
+# or stall outright.
+#
+# Keep this list aligned with mcp/.dockerignore (kept for local
+# `docker build mcp/` flows that use mcp/ as the context).
+
+# VCS + virtualenv + caches
+.git
+.gitignore
+.venv
+.venv-*
+__pycache__
+*.pyc
+*.pyo
+.pytest_cache
+.mypy_cache
+.ruff_cache
+.tox
+**/*.egg-info
+.import-*
+.reference-*
+.import-snapshot.py
+.refactor-import.py
+.finish-import.py
+**/.env
+**/.env.*
+!**/.env.example
+
+# IDE
+.vscode
+.idea
+*.swp
+
+# azd local state
+.azure
+
+# Node / Next.js artefacts (webui only — it has its own .dockerignore for its
+# own build context, but listing here keeps a stray COPY * from grabbing them)
+node_modules
+.next
+*.tsbuildinfo
+webui/.next
+webui/node_modules
+
+# Large demo data + load notebooks — NOT needed inside the MCP container.
+# The MCP tools query Fabric directly; these JSON dumps + ingest notebooks
+# are only used by the local `_load_demo_data.ipynb` workflow.
+_demo_data_files
+_load_demo_data.ipynb
+_create_tables.ipynb
+_onto_dump.json
+_gen_demo_data.py
+_count_rows.py
+_create_and_run_load_notebook.py
+_create_and_run_tables_notebook.py
+_create_load_notebook.py
+_create_ontology.py
+_verify_ontology.py
+create_lakehouse_tables.py
+
+# Test traces and result outputs that change frequently — never needed at
+# runtime in the container.
+agents/tests/results
+
+# Local logs
+*.log
+logs
+
+# Docs — exclude markdown by default, but allow the prompt files MCP
+# actually reads at runtime back in via `!`.
+*.md
+!agents/CopilotSDK_Instructions.md
+!agents/Method6_Council_Instructions.md
+!agents/Method7_WorkIQ_Instructions.md

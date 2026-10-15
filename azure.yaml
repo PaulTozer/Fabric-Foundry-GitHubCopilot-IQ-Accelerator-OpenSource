@@ -1,0 +1,107 @@
+# Azure Developer CLI (azd) project file for EnterpriseIQ.
+#
+# Two services are deployed to a single Container Apps environment:
+#   - mcp    : the FastMCP server (internal ingress, called by webui)
+#   - webui  : the Example Enterprise IQ chat UI (external ingress, Entra ID Easy Auth)
+#
+# Usage:
+#   azd auth login
+#   azd up                # first time: provision + build + push + deploy
+#   azd deploy mcp        # rebuild + redeploy just the MCP container
+#   azd deploy webui      # rebuild + redeploy just the chat UI
+#
+# Configuration inputs (see infra/README.md):
+# Use `azd env set <KEY> <VALUE>` ONLY for nonsecret settings before `azd up`.
+#   FABRIC_WORKSPACE_ID    Fabric workspace ID hosting the EnterpriseKG Lakehouse + Ontology
+#   FABRIC_LAKEHOUSE_ID    EnterpriseKG_Lakehouse item ID
+#   FABRIC_ONTOLOGY_ID     EnterpriseKG_Ontology item ID
+#   FABRIC_SQL_ENDPOINT    Fabric SQL endpoint hostname (no https://)
+#   FABRIC_DEPLOY_TEST_ONTOLOGY  0 (default): keep existing refs; 1: prepare dedicated synthetic items on azd up
+#   FABRIC_TEST_WORKSPACE_ID     Explicit existing development workspace; required only for the opt-in sample
+#   PROJECT_ENDPOINT       Foundry project URL — https://<account>.services.ai.azure.com/api/projects/EnterpriseKG
+#   ENTRA_TENANT_ID        Tenant restricted to sign in (your home tenant)
+#   ENTRA_CLIENT_ID        App Registration "EnterpriseIQ" — see infra/README.md
+#   ENTRA_CLIENT_SECRET    Client secret for the above app registration
+#   MCP_SERVICE_TOKEN      Random shared server-to-server secret (32+ characters)
+#   WEBUI_AUTH_SIGNING_SECRET_NAME     Active UI Easy Auth secret name (required, <=20 chars)
+#   WEBUI_AUTH_ENCRYPTION_SECRET_NAME  Active UI Easy Auth secret name (required, distinct)
+#   IQ_DEMO_MODE           1 for synthetic IQ tools; chat still requires real BYOK
+#   COPILOT_USE_AZURE_IDENTITY  1 for renewable Azure model credentials
+#   MCP_CPU                1.0 for low-cost tests, 2.0 for heavier simulations
+#
+# Authority VALUES are required protected process inputs, NOT persistent azd settings:
+#   WEBUI_AUTH_SIGNING_KEY / WEBUI_AUTH_ENCRYPTION_KEY
+# Resupply exact active values privately in deployment-process memory on provision.
+# Both values are canonical Base64 of 32 independent bytes (44 characters).
+# Never use `azd env set`, local files, or command-line literals for these values;
+# never regenerate/reset them during routine provisioning.
+
+name: fabric-foundry-githubcopilot-iq-accelerator
+metadata:
+  template: fabric-foundry-githubcopilot-iq-accelerator@1.0.0
+
+hooks:
+  preup:
+    shell: pwsh
+    run: .\infra\Invoke-FabricPreparation.ps1 -Mode Prepare
+    interactive: false
+    continueOnError: false
+  preprovision:
+    - shell: pwsh
+      run: .\infra\Assert-AuthKeyInputs.ps1
+      interactive: false
+      continueOnError: false
+    - shell: pwsh
+      run: .\infra\Invoke-FabricPreparation.ps1 -Mode Validate
+      interactive: false
+      continueOnError: false
+  predeploy:
+    shell: pwsh
+    run: .\infra\Invoke-FabricPreparation.ps1 -Mode ValidateDeployed
+    interactive: false
+    continueOnError: false
+
+services:
+  mcp:
+    project: ./mcp
+    language: python
+    host: containerapp
+    docker:
+      # Build from EnterpriseIQ root so the image can include agents/tests/ (M4/M6/M7
+      # runners, fabric_ontology, m3_sql_handler, test_cases.csv) plus
+      # crowd/ alongside the MCP package.
+      path:        ../mcp/Dockerfile
+      context:     ../
+      # Build inside ACR (ACR Tasks). Avoids pushing through the local
+      # Docker daemon, which is helpful behind corporate proxies where TLS
+      # to *.azurecr.io can stall.
+      remoteBuild: true
+  webui:
+    project: ./webui
+    language: ts
+    host: containerapp
+    docker:
+      path:        Dockerfile
+      context:     .
+      remoteBuild: true
+      # Pull the Node base image from our ACR mirror instead of docker.io
+      # to avoid Docker Hub anonymous-pull rate limits hitting ACR Tasks
+      # build agents. Re-mirror once per environment with:
+      #   az acr import --name <acr-name> \
+      #                 --source docker.io/library/node:22-alpine \
+      #                 --image  node:22-alpine --force
+      #
+      # NEXT_PUBLIC_* vars MUST be passed as build args because Next.js
+      # inlines them into the client bundle at build time.
+      #
+      # AAD client/tenant IDs are intentionally NOT passed here — they're
+      # served at runtime by /api/me from the Container App's AAD_CLIENT_ID
+      # and AAD_TENANT_ID env vars (set in infra/resources.bicep). This
+      # avoids relying on --build-arg propagation through ACR Tasks remote
+      # builds, which has been unreliable and ships an unusable client
+      # bundle on failure.
+
+infra:
+  provider: bicep
+  path: infra
+  module: main

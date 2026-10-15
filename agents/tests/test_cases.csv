@@ -1,0 +1,26 @@
+Persona,Code,Theme,Question,Level
+Pursuit Leader,PL-B01,Pipeline,How many active projects do we currently have across the portfolio?,Basic
+Pursuit Leader,PL-I01,Sector mix,Show me the count of active projects by sector for transport and water.,Intermediate
+Pursuit Leader,PL-H01,Capability proof,Which capabilities and practice networks give us the strongest evidence for digital delivery on transport programmes?,Hard
+Pursuit Leader,PL-VH01,Strategic pursuit,For strategic rail clients show total backlog value active programme count and the project directors most frequently leading delivery.,Very Hard
+Client Account Lead,CAL-B01,Portfolio,How many active projects sit under my clients and what is their combined fee budget?,Basic
+Client Account Lead,CAL-I01,Frameworks,List my framework clients and the number of active projects for each.,Intermediate
+Client Account Lead,CAL-H01,At risk,Which of my clients have active projects with margin forecast below 12 percent or risk value above 500000?,Hard
+Practice Leader,PRL-B01,Headcount,How many active staff are in each practice?,Basic
+Practice Leader,PRL-I01,Skill depth,For the water practice how many people have the Flood Risk Modelling skill at advanced or expert level?,Intermediate
+Practice Leader,PRL-H01,Utilisation,Which practices have the highest average chargeability across current project assignments?,Hard
+Commercial Analyst,CA-B01,Revenue,What is the total fee budget across all active projects?,Basic
+Commercial Analyst,CA-I01,Forecast,Show fee forecast versus fee billed by market for active projects.,Intermediate
+Commercial Analyst,CA-H01,Margin scoring,Rank the 20 worst active projects by margin forecast percent and include the project director and client.,Hard
+Project Director,PD-B01,My projects,Which projects am I directing right now?,Basic
+Project Director,PD-I01,Staffing,For my active projects show current staffed headcount by discipline.,Intermediate
+Project Director,PD-H01,Digital delivery,Which of my projects are BIM-enabled or digital-twin-enabled and what share of booked hours on them comes from digital specialists?,Hard
+Digital Delivery Lead,DDL-B01,Digital footprint,How many active projects have BIM enabled?,Basic
+Digital Delivery Lead,DDL-I01,Communities,Which practice networks are most associated with digital-twin-enabled projects?,Intermediate
+Digital Delivery Lead,DDL-H01,Skills gap,Which active projects are flagged as digital but have no digital specialists in project discipline statistics?,Hard
+People Manager,PM-B01,Team,Who reports to me and which practices do they sit in?,Basic
+People Manager,PM-I01,Skill spread,Which skills are most common across my direct reports?,Intermediate
+People Manager,PM-H01,Bench risk,Which of my people have no current project assignment but hold primary capabilities in high-demand markets like transport energy or water?,Hard
+Knowledge Lead,KL-B01,Networks,What are the largest practice networks by current membership?,Basic
+Knowledge Lead,KL-I01,Market knowledge,Which practice networks have the strongest overlap with the nature positive and carbon advisory capability areas?,Intermediate
+Knowledge Lead,KL-H01,Knowledge concentration,Which skills depend on fewer than five staff at advanced or expert level globally?,Hard
